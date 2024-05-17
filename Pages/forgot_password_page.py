@@ -33,9 +33,6 @@ class forgot_password_page_code:
         self.base.return_any("xpath", self.send_pin_btn).click()
         time.sleep(8)
 
-    def tc18(self):
-        self.base.return_any("xpath", self.go_to_login_page).click()
-        time.sleep(8)
 
     def tc19(self):
         self.base.return_any("xpath", self.verify_pin).click()
@@ -47,9 +44,16 @@ class forgot_password_page_code:
         self.base.return_any("xpath", self.verify_pin).click()
         time.sleep(5)
 
+
     def tc22(self):
         self.base.return_any("xpath", self.go_to_login_page).click()
         time.sleep(3)
+
+    def tc18(self):
+        self.driver.get(self.page_url)
+        time.sleep(2)
+        self.base.return_any("xpath", self.go_to_login_page).click()
+        time.sleep(8)
 
     def all(self, Wemail, Cemail, Wpin):
         self.tc14()
@@ -62,3 +66,4 @@ class forgot_password_page_code:
         self.tc19()
         self.tc20(Wpin)
         self.tc22()
+

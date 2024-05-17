@@ -59,6 +59,8 @@ class Create_activity_page_code:
         time.sleep(5)
 
     def tc38(self):
+        self.driver.refresh()
+        time.sleep(3)
         self.base.return_any("xpath", self.my_activity_btn).click()
         time.sleep(3)
 

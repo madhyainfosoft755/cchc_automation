@@ -56,6 +56,8 @@ class Login_page_code:
         time.sleep(8)
 
     def tc5(self, Cemail, Cpassword):
+        self.driver.get(self.page_url)
+        time.sleep(2)
         self.base.return_any("xpath", self.email_input_field).clear()
         time.sleep(2)
         self.base.return_any("xpath", self.email_input_field).send_keys(Cemail)
@@ -109,3 +111,4 @@ class Login_page_code:
         self.tc10()
         self.tc11()
         self.tc8()
+

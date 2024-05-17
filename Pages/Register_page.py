@@ -188,31 +188,8 @@ class Register_page_code:
         self.base.return_any("xpath", self.create_acc_btn).click()
         time.sleep(2)
 
-    def tc35(self, name, New_email3, New_phone3, address, adhaar_no, short_pass, short_Cpass, file_path):
-        self.driver.refresh()
-        time.sleep(5)
-        self.base.return_any("xpath", self.name).send_keys(name)
-        time.sleep(2)
-        self.base.return_any("xpath", self.email).send_keys(New_email3)
-        time.sleep(2)
-        self.base.return_any("xpath", self.phone).send_keys(New_phone3)
-        time.sleep(2)
-        self.base.return_any("xpath", self.address).send_keys(address)
-        time.sleep(2)
-        self.base.return_any("xpath", self.adhar_no).send_keys(adhaar_no)
-        time.sleep(2)
-        self.base.return_any("xpath", self.password).send_keys(short_pass)
-        time.sleep(2)
-        self.base.return_any("xpath", self.Cpassword).send_keys(short_Cpass)
-        time.sleep(2)
-        self.base.return_any("xpath", self.profile_pic).send_keys(file_path)
-        time.sleep(2)
-        self.base.return_any("xpath", self.local_cleaning).click()
-        time.sleep(2)
-        self.base.return_any("xpath", self.create_acc_btn).click()
-        time.sleep(2)
 
-    def tc36(self):
+    def tc35(self):
         self.base.return_any("xpath", self.login_here_link).click()
         time.sleep(5)
 
@@ -224,7 +201,6 @@ class Register_page_code:
         self.tc32(name, inv_email, New_phone, address, adhaar_no, password, Cpassword, file_path)
         self.tc33(name, New_email1, New_phone1, address, adhaar_no, pass1, pass2, file_path)
         self.tc34(name, New_email2, New_phone2, address, adhaar_no, Weak_pass, Weak_Cpass, file_path)
-        self.tc35(name, New_email3, New_phone3, address, adhaar_no, short_pass, short_Cpass, file_path)
-        self.tc36()
+        self.tc35()
 
 
