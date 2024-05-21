@@ -32,13 +32,12 @@ class Create_activity_page_code:
         self.driver.get(self.page_url)
         time.sleep(5)
         self.login_page_code.tc5(Cemail, Cpassword)
+        time.sleep(5)
         self.base.return_any("xpath", self.submit_btn).click()
         time.sleep(3)
 
-    def tc37(self, Cemail, Cpassword, date, time_from, time_to, file_path_photo, file_path_video):
-        date_str = date.strftime("%Y-%m-%d")
-        time_from_str = time_from.strftime("%H:%M")
-        time_to_str = time_to.strftime("%H:%M")
+    def tc37(self, Cemail, Cpassword, date, file_path_photo, file_path_video):
+        date_str = date.strftime("%m-%d-%Y")
 
         self.driver.get(self.page_url)
         time.sleep(5)
@@ -47,16 +46,16 @@ class Create_activity_page_code:
         time.sleep(2)
         self.base.return_any("xpath", self.date_field).send_keys(date_str)
         time.sleep(2)
-        self.base.return_any("xpath", self.time_from).send_keys(time_from_str)
+        self.base.return_any("xpath", self.time_from).send_keys("17:32")
         time.sleep(2)
-        self.base.return_any("xpath", self.time_to).send_keys(time_to_str)
+        self.base.return_any("xpath", self.time_to).send_keys("15:35")
         time.sleep(2)
         self.base.return_any("xpath", self.photos).send_keys(file_path_photo)
         time.sleep(2)
         self.base.return_any("xpath", self.videos).send_keys(file_path_video)
         time.sleep(2)
         self.base.return_any("xpath", self.submit_btn).click()
-        time.sleep(5)
+        time.sleep(10)
 
     def tc38(self):
         self.driver.refresh()
@@ -71,11 +70,11 @@ class Create_activity_page_code:
         self.base.return_any("xpath", self.endorse_activity_btn).click()
         time.sleep(6)
 
-    def all(self, Cemail, Cpassword, date, time_from, time_to, file_path_photo, file_path_video):
+    def all(self, Cemail, Cpassword, date, file_path_photo, file_path_video):
         self.tc36(Cemail, Cpassword)
         self.tc38()
         self.tc39(Cemail, Cpassword)
-        self.tc37(Cemail, Cpassword, date, time_from, time_to, file_path_photo, file_path_video)
+        self.tc37(Cemail, Cpassword, date, file_path_photo, file_path_video)
 
 
 
