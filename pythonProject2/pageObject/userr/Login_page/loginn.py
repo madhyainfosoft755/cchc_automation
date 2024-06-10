@@ -33,7 +33,9 @@ class Login:
         self.send_pin_btn_xpath = "//button[contains(text(),'Send PIN')]"
         self.date_element_xpath = "//div[contains(text(),'17 May 2024')]"
         self.location_compare_xpath = "//body/div[@id='root']/div[2]/form[1]/div[3]/div[6]/button[1]/div[2]"
+        self.email_not_found_error_message_xpath = "//div[@class = 'w-screen h-screen sm:w-screen sm:h-screen flex items-center justify-center pt-5 pb-5 sm:p-0 ']"
 
+        self.logout_btn_xpath = "//button[contains(text(),'LOGOUT')]"
     def email_login_input(self, register_email):
         self.driver.find_element(By.XPATH, self.email_input_field_xpath).send_keys(register_email)
 
@@ -49,6 +51,15 @@ class Login:
             print("login successfully")
         else:
             print("Not view message ")
+
+    def completelogin(self, register_email, password):
+        self.driver.find_element(By.XPATH, self.email_input_field_xpath).send_keys(register_email)
+        self.driver.find_element(By.XPATH, self.password_input_field_xpath).send_keys(password)
+        self.driver.find_element(By.XPATH, self.login_btn_xpath).click()
+        time.sleep(1)
+
+    def email_not_found_error_message(self):
+        self.driver.find_element(By.XPATH, self.email_not_found_error_message_xpath)
 
     def validate_form(self):
         self.login_button()
@@ -138,3 +149,6 @@ class Login:
         # Retrieve the user's current location
         user_latitude, user_longitude = self.get_current_location()
         print("Current location:", user_latitude, user_longitude)
+
+    def logout_button(self):
+        self.base.return_any(By.XPATH,self.logout_btn_xpath).click()

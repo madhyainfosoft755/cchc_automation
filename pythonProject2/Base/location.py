@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 import geopy.distance
 
@@ -8,9 +9,10 @@ class LocationComparison:
     def __init__(self, driver):
         self.driver = driver
 
+
     def get_expected_location(self):
         # Retrieve expected location from the webpage
-        expected_location_element = self.driver.find_element_by_id("expectedLocation")
+        expected_location_element = self.driver.find_element(By.XPATH, )
         expected_location_text = expected_location_element.text
         # Extract latitude and longitude from the text
         expected_latitude, expected_longitude = map(float, expected_location_text.split(": ")[1].split(", "))
@@ -31,22 +33,22 @@ class LocationComparison:
         distance = geopy.distance.geodesic(user_location, expected_location).kilometers
         return distance
 
-    def compare_location(self):
-        # Get the expected location from the webpage
-        expected_latitude, expected_longitude = self.get_expected_location()
-
-        # Get the user's current location
-        user_latitude, user_longitude = self.get_user_location()
-
-        # Calculate the distance between the user's location and the expected location
-        distance = self.calculate_distance(user_latitude, user_longitude, expected_latitude, expected_longitude)
-
-        # Determine if the distance is within a threshold (e.g., 1 kilometer)
-        threshold = 1  # You can adjust this threshold as needed
-        if distance <= threshold:
-            print("You are in the expected location.")
-        else:
-            print("You are not in the expected location.")
+    # def compare_location(self):
+    #     # Get the expected location from the webpage
+    #     expected_latitude, expected_longitude = self.get_expected_location()
+    #
+    #     # Get the user's current location
+    #     user_latitude, user_longitude = self.get_user_location()
+    #
+    #     # Calculate the distance between the user's location and the expected location
+    #     distance = self.calculate_distance(user_latitude, user_longitude, expected_latitude, expected_longitude)
+    #
+    #     # Determine if the distance is within a threshold (e.g., 1 kilometer)
+    #     threshold = 1  # You can adjust this threshold as needed
+    #     if distance <= threshold:
+    #         print("You are in the expected location.")
+    #     else:
+    #         print("You are not in the expected location.")
 
 
 # Initialize WebDriver
@@ -60,7 +62,7 @@ driver.get(url)
 location_comparison = LocationComparison(driver)
 
 # Call the compare_location method to compare the user's location with the expected location
-location_comparison.compare_location()
+# location_comparison.compare_location()
 
 # Close the WebDriver
 driver.quit()
