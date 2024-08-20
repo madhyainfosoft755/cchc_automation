@@ -16,15 +16,16 @@ class Create_activity_page_code:
         self.endorse_activity_btn = '/html/body/div/form/div[2]/div/div[2]/div[1]/button'
         self.gardening = '/html/body/div/form/div[2]/div/div[2]/div[2]/label[1]/span'
         self.cleaning = '/html/body/div/form/div[2]/div/div[2]/div[2]/label[2]/span'
-        self.teaching_poor = '/html/body/div/form/div[2]/div/div[2]/div[2]/label[3]/span'
+        self.feeding_poor = '/html/body/div/form/div[2]/div/div[2]/div[3]/label[2]'
         self.planting_tree = '/html/body/div/form/div[2]/div/div[2]/div[2]/label[4]/span'
         self.marathon = '/html/body/div/form/div[2]/div/div[2]/div[2]/label[5]/span'
         self.social_activity = '/html/body/div/form/div[2]/div/div[2]/div[2]/label[6]/span'
-        self.date_field = '/html/body/div/form/div[2]/div/div[2]/div[3]/div[2]/input'
-        self.time_from = '/html/body/div/form/div[2]/div/div[2]/div[4]/div[1]/input'
-        self.time_to = '/html/body/div/form/div[2]/div/div[2]/div[4]/div[2]/input'
-        self.photos = '/html/body/div/form/div[2]/div/div[2]/div[5]/div[1]/div/div/p/input'
-        self.videos = '/html/body/div/form/div[2]/div/div[2]/div[5]/div[2]/div/div/p/input'
+        self.date_field = '/html/body/div/form/div[2]/div/div[2]/div[4]/div[2]/input'
+        self.time_from = '/html/body/div/form/div[2]/div/div[2]/div[5]/div[1]/input'
+        self.time_to = '/html/body/div/form/div[2]/div/div[2]/div[5]/div[2]/input'
+        self.photos = '/html/body/div/form/div[2]/div/div[2]/div[5]/div[2]/input'
+        self.videos = '/html/body/div/form/div[2]/div/div[2]/div[5]/div[2]/input'
+        self.username = '/html/body/div/form/div[2]/div/div[1]/div/div/div/p'
 
 
 
@@ -36,20 +37,22 @@ class Create_activity_page_code:
         self.base.return_any("xpath", self.submit_btn).click()
         time.sleep(3)
 
-    def tc37(self, Cemail, Cpassword, date, file_path_photo, file_path_video):
+    def tc37(self, Cemail, Cpassword, date, time_from, time_to, file_path_photo, file_path_video):
         date_str = date.strftime("%m-%d-%Y")
+        time_from_str = time_from.strftime("%H:%M")
+        time_to_str = time_to.strftime("%H:%M")
 
         self.driver.get(self.page_url)
         time.sleep(5)
         self.login_page_code.tc5(Cemail, Cpassword)
-        self.base.return_any("xpath", self.planting_tree).click()
+        self.base.return_any("xpath", self.feeding_poor).click()
         time.sleep(2)
         self.base.return_any("xpath", self.date_field).send_keys(date_str)
         time.sleep(2)
-        self.base.return_any("xpath", self.time_from).send_keys("17:32")
+        self.base.return_any("xpath", self.time_from).send_keys(time_from_str)
         time.sleep(2)
-        self.base.return_any("xpath", self.time_to).send_keys("15:35")
-        time.sleep(2)
+        self.base.return_any("xpath", self.time_to).send_keys(time_to_str)
+        time.sleep(5)
         self.base.return_any("xpath", self.photos).send_keys(file_path_photo)
         time.sleep(2)
         self.base.return_any("xpath", self.videos).send_keys(file_path_video)
@@ -70,11 +73,11 @@ class Create_activity_page_code:
         self.base.return_any("xpath", self.endorse_activity_btn).click()
         time.sleep(6)
 
-    def all(self, Cemail, Cpassword, date, file_path_photo, file_path_video):
+    def all(self, Cemail, Cpassword, date, time_from, time_to, file_path_photo, file_path_video):
         self.tc36(Cemail, Cpassword)
         self.tc38()
         self.tc39(Cemail, Cpassword)
-        self.tc37(Cemail, Cpassword, date, file_path_photo, file_path_video)
+        self.tc37(Cemail, Cpassword, date, time_from, time_to, file_path_photo, file_path_video)
 
 
 

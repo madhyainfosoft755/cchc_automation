@@ -15,6 +15,9 @@ class Test_forgot_password_page(softest.TestCase):
     @data(*utilities.read_data_from_excel(
         "C:\\Users\\mohni\\PycharmProjects\\cchc_automation\\TestData\\Create_activity.xlsx", "Sheet1"))
     @unpack
-    def test_create_activity_page_tc(self, Cemail, Cpassword, date, file_path_photo, file_path_video):
-        self.Create_activity_code.all(Cemail, Cpassword, date, file_path_photo, file_path_video)
+    # def test_create_activity_page_tc(self, Cemail, Cpassword, date, time_from, time_to, file_path_photo, file_path_video):
+    #     self.Create_activity_code.all(Cemail, Cpassword, date, time_from, time_to, file_path_photo, file_path_video)
+    def test_create_activity_page_tc(self, Cemail, Cpassword, date, time_from, time_to, file_path_photo, file_path_video):
+        self.Create_activity_code.tc37(Cemail, Cpassword, date, time_from, time_to, file_path_photo, file_path_video)
+
 

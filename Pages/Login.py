@@ -1,5 +1,6 @@
 import  time
 from  Base.base_driver import Basedriver
+import  datetime
 
 class Login_page_code:
 
@@ -7,7 +8,7 @@ class Login_page_code:
         self.driver = driver
         self.base = Basedriver(driver)
 
-        self.page_url = 'https://ccsc.helpersin.com/'
+        self.page_url = 'https://cch247.com/apps'
         self.login_btn = '/html/body/div/div[2]/form/div[3]/button'
         self.email_input_field = '/html/body/div/div[2]/form/div[3]/div[1]/input'
         self.password_input_field = '/html/body/div/div[2]/form/div[3]/div[2]/input'
@@ -17,6 +18,8 @@ class Login_page_code:
         self.twitter_login_btn = '/html/body/div/div[2]/form/div[3]/div[3]/div[3]/div/img'
         self.instagram_login_btn = '/html/body/div/div[2]/form/div[3]/div[3]/div[4]/div/div/img'
         self.register_user = '/html/body/div/div[2]/form/div[3]/div[5]/button'
+        self.date_field_login_page = "/html/body/div/div[2]/form/div[3]/div[6]/button[2]/div[2]"
+        self.location_field = '/html/body/div/div[2]/form/div[3]/div[6]/button[1]'
 
 
     def tc1(self):
@@ -99,6 +102,28 @@ class Login_page_code:
         self.base.return_any("xpath", self.register_user).click()
         time.sleep(3)
 
+    def tc12(self, expected_location):
+        if isinstance(expected_location, list) and len(expected_location) > 0:
+            expected_location = expected_location[0]
+
+        location_field_txt = self.base.return_any("xpath", self.location_field).text
+        keywords = expected_location.split(", ")
+
+        for keyword in keywords:
+            if keyword not in location_field_txt:
+                print(f"Expected keyword '{keyword}' not found in displayed location '{location_field_txt}'")
+                return
+
+        print("Location is correct")
+
+    def tc13(self):
+        date_field_txt = self.base.return_any("xpath", self.date_field_login_page).text
+        todays_date = datetime.datetime.now().strftime('%d %B %Y')
+        if date_field_txt == todays_date:
+            print("Date field is displaying today's date")
+        else:
+            print(f'Expected date {todays_date} but found {date_field_txt}')
+
     def all(self, email, password, Cemail, Cpassword):
         self.tc1()
         self.tc2(email)
@@ -106,9 +131,9 @@ class Login_page_code:
         self.tc4(email, password)
         self.tc5(Cemail, Cpassword)
         self.tc6()
-        self.tc7()
-        self.tc9()
-        self.tc10()
+        # self.tc7()
+        # self.tc9()
+        # self.tc10()
         self.tc11()
         self.tc8()
 

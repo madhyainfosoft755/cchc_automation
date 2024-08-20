@@ -1,6 +1,6 @@
-import  time
-from  Base.base_driver import Basedriver
-from  Pages.get_forgot_pass_pin_form_gmail import Get_pin_form_gmail
+import time
+from Base.base_driver import Basedriver
+from Pages.get_forgot_pass_pin_form_gmail import Get_pin_form_gmail
 import re
 
 
@@ -10,7 +10,7 @@ class forgot_password_page_code:
         self.driver = driver
         self.base = Basedriver(driver)
         self.get_pin = Get_pin_form_gmail()
-        
+
         self.page_url = 'https://ccsc.helpersin.com/forget'
         self.send_pin_btn = '/html/body/div/div[2]/div/div[3]/button[1]'
         self.enter_email = '/html/body/div/div[2]/div/div[3]/div/input'
@@ -41,7 +41,6 @@ class forgot_password_page_code:
         time.sleep(2)
         self.base.return_any("xpath", self.send_pin_btn).click()
         time.sleep(8)
-
 
     def tc19(self):
         self.base.return_any("xpath", self.verify_pin).click()

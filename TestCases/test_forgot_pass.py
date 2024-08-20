@@ -17,3 +17,4 @@ class Test_forgot_password_page(softest.TestCase):
     @unpack
     def test_login_page_tc(self, Wemail, Cemail, Wpin, pass1, pass2, password):
         self.forgot_pass_code.all(Wemail, Cemail, Wpin, pass1, pass2, password)
+

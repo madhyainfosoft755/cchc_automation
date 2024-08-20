@@ -5,6 +5,7 @@ from  Pages.forgot_password_page import forgot_password_page_code
 from  Pages.create_activity_page import Create_activity_page_code
 from  Pages.Register_page import Register_page_code
 from  Pages.Activities_page import activities_page_code
+from Pages.admin_login import admin_login_page_code
 from  ddt import ddt,data,unpack
 from  Utilities.utilities import utilities
 
@@ -19,6 +20,7 @@ class Test_all_page_automation(softest.TestCase):
         self.create_act_page = Create_activity_page_code(self.driver)
         self.activity_page = activities_page_code(self.driver)
         self.register_page = Register_page_code(self.driver)
+        self.admin_login_page = admin_login_page_code(self.driver)
 
     @pytest.mark.run(order=1)
     def test_tc1(self):
@@ -250,4 +252,13 @@ class Test_all_page_automation(softest.TestCase):
     @pytest.mark.run(order=38)
     def test_tc35(self):
         self.register_page.tc35()
+
+    @pytest.mark.run(order=39)
+    def test_tc74(self, Cemail, Cpassword):
+        self.admin_login_page.tc74(Cemail, Cpassword)
+
+
+
+
+
 
