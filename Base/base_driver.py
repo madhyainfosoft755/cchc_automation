@@ -22,3 +22,11 @@ class Basedriver:
     def return_any(self, locator_name, locator_var):
         return self.locator(locator_name, locator_var)
 
+    def is_element_present(self, locator_type, locator_val):
+        try:
+            self.driver.find_element(locator_type, locator_val)
+            return True
+        except:
+            return False
+
+
