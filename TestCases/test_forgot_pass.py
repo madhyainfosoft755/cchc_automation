@@ -12,9 +12,9 @@ class Test_forgot_password_page(softest.TestCase):
     def class_setup(self):
         self.forgot_pass_code = forgot_password_page_code(self.driver)
 
-    @data(*utilities.read_data_from_excel(
-        "C:\\Users\\mohni\\PycharmProjects\\cchc_automation\\TestData\\forgot_pass.xlsx", "Sheet1"))
-    @unpack
-    def test_login_page_tc(self, Wemail, Cemail, Wpin, pass1, pass2, password):
-        self.forgot_pass_code.all(Wemail, Cemail, Wpin, pass1, pass2, password)
+    # @data(*utilities.read_data_from_excel(
+        # "C:\\Users\\mohni\\PycharmProjects\\cchc_automation\\TestData\\forgot_pass.xlsx", "Sheet1"))
+    # @unpack
+    def test_login_page_tc(self):
+        self.forgot_pass_code.all()
 

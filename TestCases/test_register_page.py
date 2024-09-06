@@ -15,6 +15,5 @@ class Test_register_page(softest.TestCase):
     @data(*utilities.read_data_from_excel(
         "C:\\Users\\mohni\\PycharmProjects\\cchc_automation\\TestData\\Register_page.xlsx", "Sheet1"))
     @unpack
-    def test_register_tc(self, name, email, phone, address, adhaar_no, password, Cpassword, file_path, New_email, inv_email, New_phone, New_email1, New_phone1, pass1, pass2, New_email2, New_phone2, Weak_pass, Weak_Cpass, New_email3, New_phone3, short_pass, short_Cpass):
-        self.Register_page_code.all(name, email, phone, address, adhaar_no, password, Cpassword, file_path, New_email, inv_email, New_phone, New_email1, New_phone1, pass1, pass2, New_email2, New_phone2, Weak_pass, Weak_Cpass, New_email3, New_phone3, short_pass, short_Cpass)
-
+    def test_register_tc(self, name, email, phone, address, password, Cpassword):
+        self.Register_page_code.all(name, email, phone, address, password, Cpassword)

@@ -1,389 +1,257 @@
-import  time
-from  Base.base_driver import Basedriver
-import  datetime
+# Pages/Login.py
+
+import time
+import datetime
 from selenium.webdriver import ActionChains
 from geopy.geocoders import Nominatim
+from constants.constants import LoginPageLocators, URLs, Messages
+from selenium.webdriver.support.wait import WebDriverWait
 
-class Login_page_code:
+from Base.base_driver import BaseDriver
+from Utilities.utilities import Utilities
+import logging
+
+# Configure logging
+logging.basicConfig(
+    filename='logs/automation.log',
+    level=logging.INFO,
+    format='%(asctime)s:%(levelname)s:%(message)s'
+)
+logger = logging.getLogger()
+
+class LoginPage:
 
     def __init__(self, driver):
         self.driver = driver
-        self.base = Basedriver(driver)
+        self.base = BaseDriver(driver)
         self.actions = ActionChains(self.driver)
-
-        self.page_url = 'https://cch247.com/apps'
-        self.login_btn = "/html/body/div/div[2]/form/div[3]/button"
-        self.email_input_field = "//input[@placeholder='Email']"
-        self.password_input_field = "//input[@placeholder='Password']"
-        self.forgot_password = "//h2[normalize-space()='Forgot Password']"
-        self.google_login_btn = "//img[contains(@class,'h-full w-full cursor-pointer')]"
-        self.facebook_login_btn = '/html/body/div/div[2]/form/div[3]/div[3]/div[3]/div/img'
-        self.linkedin_login_btn = '//*[@id="root"]/div[2]/form/div[3]/div[3]/div[2]/div/img'
-        self.twitter_login = '//*[@id="root"]/div[2]/form/div[3]/div[3]/div[4]/div/img'
-        self.instagram_login = '//*[@id="root"]/div[2]/form/div[3]/div[3]/div[5]/div/div/img'
-        self.New_volunteer_registration = '//*[@id="root"]/div[2]/form/div[3]/div[5]/button'
-        self.date_field_login_page = "/html/body/div/div[2]/form/div[3]/div[6]/button[2]/div[2]"
-        self.location_field = '/html/body/div/div[2]/form/div[3]/div[6]/button[1]'
-        self.login_error_xpath = '//*[@id="root"]/div[2]/form/div[3]/div[3]/span[1]'
-        self.invalid_pass_err = "//span[contains(@class,'block sm:inline py-2 text-xs')]"
-        self.req_field_message = "Please fill out this field."
-        self.expected_url_after_login = "https://cch247.com/apps/create"
-        self.welcome_txt1 = "//p[normalize-space()='Welcome to CCH247 (Community Care 247)']"
-        self.welcome_txt2 = '//*[@id="root"]/div[2]/form/div[3]/p[2]'
-        self.hindi_txt = '//*[@id="root"]/div[2]/form/div[3]/p[3]'
-        self.forgot_pass_page_url = "https://cch247.com/apps/forget"
-        self.eye_btn_pass_field = '.svg-inline--fa.fa-eye.text-gray-700.cursor-pointer'
+        self.page_url = URLs.BASE_URL
 
     def tc2(self):
-        self.driver.get(self.page_url)
-        time.sleep(2)
-        email_element = self.base.return_any("xpath", self.email_input_field)
-        email_element.clear()
-        time.sleep(2)
-        self.base.return_any("xpath", self.password_input_field).clear()
-        time.sleep(2)
-        self.base.return_any("xpath", self.login_btn).click()
-        # print(f"Email validation message: {email_validation_message}")
-        email_validation_message = email_element.get_attribute("validationMessage")
-        assert self.req_field_message in email_validation_message
-        time.sleep(8)
+        try:
+            self.driver.get(self.page_url)
+            logger.info("Navigated to login page")
+            email_element = self.base.return_any("xpath", LoginPageLocators.EMAIL_INPUT)
+            email_element.clear()
+            logger.info("Cleared email input field")
+            password_element = self.base.return_any("xpath", LoginPageLocators.PASSWORD_INPUT)
+            password_element.clear()
+            logger.info("Cleared password input field")
+            login_button = self.base.return_any("xpath", LoginPageLocators.LOGIN_BTN)
+            login_button.click()
+            logger.info("Clicked login button without credentials")
+
+            email_validation_message = email_element.get_attribute("validationMessage")
+            assert Messages.REQ_FIELD in email_validation_message, "Required field message not displayed for email."
+            logger.info("Validation message for email field verified")
+        except AssertionError as ae:
+            logger.error(f"Assertion failed in tc2: {ae}")
+            self.base.capture_screenshot("tc2_failure")
+            assert False
+        except Exception as e:
+            logger.error(f"Exception in tc2: {e}")
+            self.base.capture_screenshot("tc2_exception")
+            assert False
 
     def tc3(self, email):
-        self.base.return_any("xpath", self.email_input_field).send_keys(email)
-        time.sleep(2)
-        self.base.return_any("xpath", self.login_btn).click()
-        time.sleep(2)
-        password_element = self.base.return_any("xpath", self.password_input_field)
-        password_validation_message = password_element.get_attribute("validationMessage")
-        assert self.req_field_message in password_validation_message
-        time.sleep(5)
+        try:
+            email_field = self.base.return_any("xpath", LoginPageLocators.EMAIL_INPUT)
+            email_field.send_keys(email)
+            logger.info(f"Entered email: {email}")
+            login_button = self.base.return_any("xpath", LoginPageLocators.LOGIN_BTN)
+            login_button.click()
+            logger.info("Clicked login button with only email")
+
+            password_element = self.base.return_any("xpath", LoginPageLocators.PASSWORD_INPUT)
+            password_validation_message = password_element.get_attribute("validationMessage")
+            assert Messages.REQ_FIELD in password_validation_message, "Required field message not displayed for password."
+            logger.info("Validation message for password field verified")
+        except AssertionError as ae:
+            logger.error(f"Assertion failed in tc3: {ae}")
+            self.base.capture_screenshot("tc3_failure")
+            assert False
+        except Exception as e:
+            logger.error(f"Exception in tc3: {e}")
+            self.base.capture_screenshot("tc3_exception")
+            assert False
 
     def tc4(self, password):
-        email_element = self.base.return_any("xpath", self.email_input_field)
-        email_element.clear()
-        time.sleep(2)
-        self.base.return_any("xpath", self.password_input_field).send_keys(password)
-        time.sleep(2)
-        self.base.return_any("xpath", self.login_btn).click()
-        time.sleep(2)
-        email_validation_message = email_element.get_attribute("validationMessage")
-        assert self.req_field_message in email_validation_message
-        time.sleep(2)
+        try:
+            email_field = self.base.return_any("xpath", LoginPageLocators.EMAIL_INPUT)
+            email_field.clear()
+            logger.info("Cleared email input field in tc4")
+            password_field = self.base.return_any("xpath", LoginPageLocators.PASSWORD_INPUT)
+            password_field.send_keys(password)
+            logger.info(f"Entered password: {password}")
+            login_button = self.base.return_any("xpath", LoginPageLocators.LOGIN_BTN)
+            login_button.click()
+            logger.info("Clicked login button with only password")
+
+            email_validation_message = email_field.get_attribute("validationMessage")
+            assert Messages.REQ_FIELD in email_validation_message, "Required field message not displayed for email."
+            logger.info("Validation message for email field verified in tc4")
+        except AssertionError as ae:
+            logger.error(f"Assertion failed in tc4: {ae}")
+            self.base.capture_screenshot("tc4_failure")
+            assert False
+        except Exception as e:
+            logger.error(f"Exception in tc4: {e}")
+            self.base.capture_screenshot("tc4_exception")
+            assert False
 
     def tc5(self, Wemail, password):
-        self.base.return_any("xpath", self.email_input_field).clear()
-        time.sleep(2)
-        self.base.return_any("xpath", self.email_input_field).send_keys(Wemail)
-        time.sleep(2)
-        self.base.return_any("xpath", self.password_input_field).clear()
-        time.sleep(2)
-        self.base.return_any("xpath", self.password_input_field).send_keys(password)
-        time.sleep(2)
-        self.base.return_any("xpath", self.login_btn).click()
-        time.sleep(2)
-        presense_check = self.base.is_element_present("xpath", self.login_error_xpath)
-        if presense_check:
-            assert True
-        else:
+        try:
+            email_field = self.base.return_any("xpath", LoginPageLocators.EMAIL_INPUT)
+            email_field.clear()
+            logger.info("Cleared email input field in tc5")
+            email_field.send_keys(Wemail)
+            logger.info(f"Entered email: {Wemail}")
+            password_field = self.base.return_any("xpath", LoginPageLocators.PASSWORD_INPUT)
+            password_field.clear()
+            logger.info("Cleared password input field in tc5")
+            password_field.send_keys(password)
+            logger.info(f"Entered password: {password}")
+            login_button = self.base.return_any("xpath", LoginPageLocators.LOGIN_BTN)
+            login_button.click()
+            logger.info("Clicked login button with invalid credentials")
+
+            presence_check = self.base.is_element_present("xpath", LoginPageLocators.LOGIN_ERROR)
+            assert presence_check, "Login error message not displayed."
+            logger.info("Login error message verified in tc5")
+        except AssertionError as ae:
+            logger.error(f"Assertion failed in tc5: {ae}")
+            self.base.capture_screenshot("tc5_failure")
             assert False
-        time.sleep(8)
+        except Exception as e:
+            logger.error(f"Exception in tc5: {e}")
+            self.base.capture_screenshot("tc5_exception")
+            assert False
 
     def tc6(self, Cemail, Wpassword):
-        self.base.return_any("xpath", self.email_input_field).clear()
-        time.sleep(2)
-        self.base.return_any("xpath", self.email_input_field).send_keys(Cemail)
-        time.sleep(2)
-        self.base.return_any("xpath", self.password_input_field).clear()
-        time.sleep(2)
-        self.base.return_any("xpath", self.password_input_field).send_keys(Wpassword)
-        time.sleep(2)
-        self.base.return_any("xpath", self.login_btn).click()
-        presence_check = self.base.is_element_present("xpath", self.invalid_pass_err)
-        if presence_check:
-            assert True
-        else:
+        try:
+            email_field = self.base.return_any("xpath", LoginPageLocators.EMAIL_INPUT)
+            email_field.clear()
+            logger.info("Cleared email input field in tc6")
+            email_field.send_keys(Cemail)
+            logger.info(f"Entered email: {Cemail}")
+            password_field = self.base.return_any("xpath", LoginPageLocators.PASSWORD_INPUT)
+            password_field.clear()
+            logger.info("Cleared password input field in tc6")
+            password_field.send_keys(Wpassword)
+            logger.info(f"Entered wrong password: {Wpassword}")
+            login_button = self.base.return_any("xpath", LoginPageLocators.LOGIN_BTN)
+            login_button.click()
+            logger.info("Clicked login button with correct email and wrong password")
+
+            presence_check = self.base.is_element_present("xpath", LoginPageLocators.INVALID_PASS_ERR)
+            assert presence_check, "Invalid password error message not displayed."
+            logger.info("Invalid password error message verified in tc6")
+        except AssertionError as ae:
+            logger.error(f"Assertion failed in tc6: {ae}")
+            self.base.capture_screenshot("tc6_failure")
             assert False
-        time.sleep(5)
+        except Exception as e:
+            logger.error(f"Exception in tc6: {e}")
+            self.base.capture_screenshot("tc6_exception")
+            assert False
 
     def tc7(self, Cemail, Cpass):
-        self.base.return_any("xpath", self.email_input_field).clear()
-        time.sleep(2)
-        self.base.return_any("xpath", self.email_input_field).send_keys(Cemail)
-        time.sleep(2)
-        self.base.return_any("xpath", self.password_input_field).clear()
-        time.sleep(2)
-        self.base.return_any("xpath", self.password_input_field).send_keys(Cpass)
-        time.sleep(2)
-        self.base.return_any("xpath", self.login_btn).click()
-        time.sleep(8)
-        current_url = self.driver.current_url
-        if current_url == self.expected_url_after_login:
-            assert True
-        else:
+        try:
+            email_field = self.base.return_any("xpath", LoginPageLocators.EMAIL_INPUT)
+            email_field.clear()
+            logger.info("Cleared email input field in tc7")
+            email_field.send_keys(Cemail)
+            logger.info(f"Entered correct email: {Cemail}")
+            password_field = self.base.return_any("xpath", LoginPageLocators.PASSWORD_INPUT)
+            password_field.clear()
+            logger.info("Cleared password input field in tc7")
+            password_field.send_keys(Cpass)
+            logger.info(f"Entered correct password: {Cpass}")
+            login_button = self.base.return_any("xpath", LoginPageLocators.LOGIN_BTN)
+            login_button.click()
+            logger.info("Clicked login button with correct credentials")
+
+            current_url = self.driver.current_url
+            assert current_url == URLs.EXPECTED_URL_AFTER_LOGIN, f"Expected URL after login: {URLs.EXPECTED_URL_AFTER_LOGIN}, but got {current_url}"
+            logger.info("Successfully logged in and navigated to expected URL")
+        except AssertionError as ae:
+            logger.error(f"Assertion failed in tc7: {ae}")
+            self.base.capture_screenshot("tc7_failure")
             assert False
-        time.sleep(5)
+        except Exception as e:
+            logger.error(f"Exception in tc7: {e}")
+            self.base.capture_screenshot("tc7_exception")
+            assert False
 
     def tc8(self):
-        self.driver.get(self.page_url)
-        time.sleep(2)
-        presence_check1 = self.base.is_element_present("xpath", self.welcome_txt1)
-        presence_check2 = self.base.is_element_present("xpath", self.welcome_txt2)
-        if presence_check1 and presence_check2:
-            assert True
-        else:
+        try:
+            self.driver.get(self.page_url)
+            logger.info("Navigated to login page for tc8")
+            presence_check1 = self.base.is_element_present("xpath", LoginPageLocators.WELCOME_TEXT1)
+            presence_check2 = self.base.is_element_present("xpath", LoginPageLocators.WELCOME_TEXT2)
+            assert presence_check1 and presence_check2, "Welcome texts not displayed correctly."
+            logger.info("Welcome texts verified in tc8")
+        except AssertionError as ae:
+            logger.error(f"Assertion failed in tc8: {ae}")
+            self.base.capture_screenshot("tc8_failure")
+            assert False
+        except Exception as e:
+            logger.error(f"Exception in tc8: {e}")
+            self.base.capture_screenshot("tc8_exception")
             assert False
 
     def tc9(self):
-        presence_check = self.base.is_element_present("xpath", self.hindi_txt)
-        if presence_check:
-            assert True
-        else:
+        try:
+            presence_check = self.base.is_element_present("xpath", LoginPageLocators.HINDI_TEXT)
+            assert presence_check, "Hindi text not displayed."
+            logger.info("Hindi text verified in tc9")
+        except AssertionError as ae:
+            logger.error(f"Assertion failed in tc9: {ae}")
+            self.base.capture_screenshot("tc9_failure")
+            assert False
+        except Exception as e:
+            logger.error(f"Exception in tc9: {e}")
+            self.base.capture_screenshot("tc9_exception")
             assert False
 
     def tc10(self):
-        self.base.return_any("xpath", self.forgot_password).click()
-        time.sleep(5)
-        current_url = self.driver.current_url
-        if current_url == self.forgot_pass_page_url:
-            assert True
-        else:
+        try:
+            forgot_pass = self.base.return_any("xpath", LoginPageLocators.FORGOT_PASSWORD)
+            forgot_pass.click()
+            logger.info("Clicked on Forgot Password link")
+            WebDriverWait(self.driver, 10).until(EC.url_to_be(URLs.FORGOT_PASSWORD_URL))
+            current_url = self.driver.current_url
+            assert current_url == URLs.FORGOT_PASSWORD_URL, f"Expected Forgot Password URL: {URLs.FORGOT_PASSWORD_URL}, but got {current_url}"
+            logger.info("Navigated to Forgot Password page successfully in tc10")
+        except AssertionError as ae:
+            logger.error(f"Assertion failed in tc10: {ae}")
+            self.base.capture_screenshot("tc10_failure")
+            assert False
+        except Exception as e:
+            logger.error(f"Exception in tc10: {e}")
+            self.base.capture_screenshot("tc10_exception")
             assert False
 
     def tc11(self):
-        self.driver.get(self.page_url)
-        time.sleep(2)
-        original_window = self.driver.current_window_handle
-        window_before_click = self.driver.window_handles
-        self.base.return_any("xpath", self.google_login_btn).click()
-        time.sleep(2)
-        window_after_click = self.driver.window_handles
-        new_window = None
-        for window in window_after_click:
-            if window not in window_before_click:
-                new_window = window
-                break
-
-        if new_window:
-            self.driver.switch_to.window(new_window)
-        else:
-            print("No new window opened")
-            return False
-
         try:
-            page_source = self.driver.page_source
-            if "Sign in with Google" in page_source:
-                assert True
-            else:
-                assert False
-        finally:
-            self.driver.close()
-            self.driver.switch_to.window(original_window)
+            original_window = self.driver.current_window_handle
+            windows_before_click = self.driver.window_handles
+            google_login_btn = self.base.return_any("xpath", LoginPageLocators.GOOGLE_LOGIN_BTN)
+            google_login_btn.click()
+            logger.info("Clicked Google login button")
 
-    def tc12(self):
-        self.driver.refresh()
-        time.sleep(2)
-        facebook_icon = self.base.return_any("xpath", self.facebook_login_btn)
-        linkedin_icon = self.base.return_any("xpath", self.linkedin_login_btn)
-        instagram_icon = self.base.return_any("xpath", self.instagram_login)
-        twitter_icon = self.base.return_any("xpath", self.twitter_login)
-        google_icon = self.base.return_any("xpath", self.google_login_btn)
-
-        # print(facebook_icon.get_attribute('class'))
-        icons = [facebook_icon, linkedin_icon, instagram_icon, twitter_icon]
-
-        for icon in icons:
-            class_attribute = icon.get_attribute('class')
-            is_disable = 'filter grayscale' in class_attribute
-            # print(is_disable)
-            if is_disable:
-                assert True
-        class_attribute = google_icon.get_attribute('class')
-        is_enalbe = 'cursor-pointer' in class_attribute
-        if is_enalbe:
-            assert True
-
-    def tc13(self):
-        self.base.return_any("xpath", self.New_volunteer_registration).click()
-        time.sleep(2)
-        page_source = self.driver.page_source
-        if "Create an account to access all features" in page_source:
-            assert True
-            time.sleep(3)
-
-    def get_current_location(self):
-        geolocator = Nominatim(user_agent="geoapiExercises")
-        latitude = "23.855990"
-        longitude = "78.783640"
-        location = geolocator.reverse(f"{latitude}, {longitude}")
-        address = location.raw['address']
-        city = address.get('city', '')
-        state = address.get('state', '')
-        return city, state
-
-    def tc14(self):
-        current_city, current_state = self.get_current_location()
-        location_field = self.base.return_any("xpath", self.location_field)
-        location_text = location_field.text
-
-        if current_city in location_text and current_state in location_text:
-            assert True
-        else:
-            print(f"Location field text: {location_text}")
-            print(f"Expected City: {current_city}, State: {current_state}")
+            WebDriverWait(self.driver, 10).until(EC.new_window_is_opened(windows_before_click))
+            new_window = [window for window in self.driver.window_handles if window != original_window][0]
+            self.driver.switch_to.window(new_window)
+            logger.info("Switched to Google login window")
+            WebDriverWait(self.driver, 10).until(EC.url_contains("https://accounts.google.com"))
+            logger.info("Navigated to Google login page in tc11")
+        except AssertionError as ae:
+            logger.error(f"Assertion failed in tc11: {ae}")
+            self.base.capture_screenshot("tc11_failure")
             assert False
-
-    def tc15(self):
-        date_field_txt = self.base.return_any("xpath", self.date_field_login_page).text
-        todays_date = datetime.datetime.now().strftime('%d %b %Y')
-        if date_field_txt == todays_date:
-            print("Date field is displaying today's date")
-            assert True
-        else:
-            print(f'Expected date {todays_date} but found {date_field_txt}')
+        except Exception as e:
+            logger.error(f"Exception in tc11: {e}")
+            self.base.capture_screenshot("tc11_exception")
             assert False
-
-    def tc16(self):
-        self.driver.refresh()
-        #  ActionChains to perform mouse hover
-        email_field = self.base.return_any("xpath", self.email_input_field)
-        password_filed = self.base.return_any("xpath", self.password_input_field)
-
-        #  List of fields to check
-        fields = [email_field, password_filed]
-
-        # Expected cursors
-        # expected_cursors = ["text", "pointer", "not-allowed"]
-
-        for field in fields:
-            self.actions.move_to_element(field).perform()
-            time.sleep(2)
-            cursor_style = field.value_of_css_property('cursor')
-            if cursor_style == "text":
-                assert True
-            else:
-                assert False
-
-    def tc17(self):
-        eye_btn = self.base.return_any("css", self.eye_btn_pass_field)
-        filed = eye_btn
-        cursor_style = filed.value_of_css_property('cursor')
-        print(cursor_style)
-        if cursor_style == "pointer":
-            assert True
-        else:
-            assert False
-
-    def tc18(self):
-        login_btn = self.base.return_any("xpath", self.login_btn)
-        field = login_btn
-        cursor_style = field.value_of_css_property("cursor")
-        if cursor_style == "pointer":
-            assert True
-        else:
-            assert False
-
-    def tc19(self):
-        forgot_pass = self.base.return_any("xpath", self.forgot_password)
-        field = forgot_pass
-        cursor_style = field.value_of_css_property("cursor")
-        if cursor_style == "pointer":
-            assert True
-        else:
-            assert False
-
-    def tc20(self):
-        google_icon = self.base.return_any("xpath", self.google_login_btn)
-        field = google_icon
-        cursor_style = field.value_of_css_property("cursor")
-        if cursor_style == "pointer":
-            assert True
-        else:
-            assert False
-
-    def tc21(self):
-        facebook_icon = self.base.return_any("xpath", self.facebook_login_btn)
-        linkedin_icon = self.base.return_any("xpath", self.linkedin_login_btn)
-        instagram_icon = self.base.return_any("xpath", self.instagram_login)
-        twitter_icon = self.base.return_any("xpath", self.twitter_login)
-
-        fields = [facebook_icon, linkedin_icon, instagram_icon, twitter_icon]
-
-        for field in fields:
-            self.actions.move_to_element(field).perform()
-            time.sleep(2)
-            cursor_style = field.value_of_css_property('cursor')
-            if cursor_style == "not-allowed":
-                assert True
-            else:
-                assert False
-
-    def tc22(self):
-        register_user = self.base.return_any("xpath", self.New_volunteer_registration)
-        field = register_user
-        cursor_style = field.value_of_css_property("cursor")
-        if cursor_style == "pointer":
-            assert True
-        else:
-            assert False
-
-    def tc23(self):
-        date_field = self.base.return_any("xpath", self.date_field_login_page)
-        location_field = self.base.return_any("xpath", self.location_field)
-
-        fields = [date_field, location_field]
-
-        for field in fields:
-            self.actions.move_to_element(field).perform()
-            time.sleep(2)
-            cursor_style = field.value_of_css_property('cursor')
-            if cursor_style == "default":
-                assert True
-            else:
-                assert False
-
-    def tc24(self, Cemail, Cpassword):
-        email_field = self.base.return_any("xpath", self.email_input_field)
-        password_field = self.base.return_any("xpath", self.password_input_field)
-        eye_btn = self.base.return_any("css", self.eye_btn_pass_field)
-        attribute_val = password_field.get_attribute('type')
-
-        email_field.send_keys(Cemail)
-        time.sleep(2)
-        password_field.send_keys(Cpassword)
-        time.sleep(4)
-
-        assert  attribute_val == "password", "Password field should be initially hidden"
-        eye_btn.click()
-        time.sleep(5)
-        assert attribute_val == "text", "Password field should be visible after clicking the eye button"
-        time.sleep(2)
-        eye_btn.click()
-        time.sleep(5)
-        assert attribute_val == "password", "Password field should be hidden after clicking the eye button again"
-
-    def all(self, email, password, Wemail, Cemail, Wpassword, Cpassword):
-        self.tc2()
-        self.tc3(email)
-        self.tc4(password)
-        self.tc5(Wemail, password)
-        self.tc6(Cemail, Wpassword)
-        self.tc7(Cemail, Cpassword)
-        self.tc8()
-        self.tc9()
-        self.tc10()
-        self.tc11()
-        self.tc12()
-        # self.tc14()
-        self.tc15()
-        self.tc16()
-        self.tc17()
-        self.tc18()
-        self.tc19()
-        self.tc20()
-        self.tc21()
-        self.tc22()
-        self.tc23()
-        self.tc24()
-
-
 
